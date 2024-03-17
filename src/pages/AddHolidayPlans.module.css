@@ -1,0 +1,17 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.title-container {
+    margin-bottom: 20px;
+}
+
+.title-container h2 {
+    color: #333;
+}

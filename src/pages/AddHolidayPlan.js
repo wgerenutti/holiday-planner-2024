@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HolidayPlanForm from '../components/HolidayPlanForm';
-import { createClient } from '@supabase/supabase-js';
+import supabase from '../config/supabaseClient.js'; 
+import './AddHolidayPlans.module.css'
 
 const AddHolidayPlans = () => {
     const navigate = useNavigate();
-    const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
-    const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
     const [message, setMessage] = useState('');
+
+    const SUCCESS_MESSAGE = 'Holiday plan added successfully!';
+    const ERROR_MESSAGES = {
+        DEFAULT: 'Failed to add holiday plan. Please try again.',
+        UNEXPECTED: 'An unexpected error occurred. Please try again later.',
+    };
 
     const handleSubmit = async (formData) => {
         const processedData = {
@@ -16,17 +20,17 @@ const AddHolidayPlans = () => {
         };
 
         try {
-            const { data, error } = await supabase
+            const { error } = await supabase
                 .from('holidayplan')
                 .insert(processedData);
 
             if (error) {
-                setMessage('Failed to add holiday plan. Please try again.');
+                setMessage(ERROR_MESSAGES.DEFAULT);
             } else {
-                setMessage('Holiday plan added successfully!');
+                setMessage(SUCCESS_MESSAGE);
             }
         } catch (error) {
-            setMessage('An unexpected error occurred. Please try again later.');
+            setMessage(ERROR_MESSAGES.UNEXPECTED);
         }
     };
 
@@ -41,20 +45,14 @@ const AddHolidayPlans = () => {
     };
 
     return (
-        <div>
-            <div style={titleContainerStyle}>
+        <div className="container">
+            <div className="title-container">
                 <h2>Add holiday plan</h2>
             </div>
             <p>{message}</p>
             <HolidayPlanForm onSubmit={handleSubmit} onBack={handleBack} />
         </div>
     );
-};
-
-const titleContainerStyle = {
-    maxWidth: '600px',
-    margin: 'auto',
-    textAlign: 'center',
 };
 
 export default AddHolidayPlans;
