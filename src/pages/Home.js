@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import HolidayPlanList from '../components/HolidayPlanList';
+import Pagination from '../components/Pagination';
+import { FaSearch } from 'react-icons/fa';
+import styles from './Home.module.css';
+import supabase from '../config/supabaseClient.js';
 
 const Home = () => {
     const [holidayPlans, setHolidayPlans] = useState([]);
-    const [message, setMessage] = useState('');
-    const location = useLocation();
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [message, setMessage] = useState('');    
+
     useEffect(() => {
         const messageFromStorage = localStorage.getItem('holidayPlanMessage');
         if (messageFromStorage) {
             setMessage(messageFromStorage);
             const timer = setTimeout(() => {
                 setMessage('');
-                localStorage.removeItem('holidayPlanMessage'); 
+                localStorage.removeItem('holidayPlanMessage');
             }, 5000);
 
             return () => clearTimeout(timer);
@@ -20,53 +27,91 @@ const Home = () => {
 
         const fetchHolidayPlans = async () => {
             try {
-                const response = await fetch('https://jcgwdbcdxjcogmgfexok.supabase.co');
-                const data = await response.json();
+                const { data, error } = await supabase
+                    .from('holidayplan')
+                    .select('*');
 
-                setHolidayPlans(data);
+                if (error) {
+                    console.error('Error', error);
+                } else {
+                    setHolidayPlans(data);
+                }
             } catch (error) {
-                console.error('Erro ao buscar planos de férias', error);
+                console.error('Unexpected error:', error);
             }
         };
-
         fetchHolidayPlans();
-    }, []);
+    }, [supabase]);
+
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleItemsPerPageChange = (e) => {
+        setItemsPerPage(parseInt(e.target.value, 10));
+        setCurrentPage(1);
+    };
+
+    const handleEdit = (id) => {
+        console.log(`Editing plan id ${id}`);
+    };
+
+    const handleDelete = (id) => {
+        console.log(`Deleting plan id ${id}`);
+    };
+
+    const filteredPlans = holidayPlans.filter((plan) =>
+        plan.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredPlans.slice(indexOfFirstItem, indexOfLastItem);
 
     return (
-        <div style={containerStyle}>
-            <h2 style={titleStyle}>Explore Holiday Plans</h2>
+        <div className={styles.containerStyle}>
+            <h2 className={styles.titleStyle}>Explore Holiday Plans</h2>
             {message && <p>{message}</p>}
-            <HolidayPlanList holidayPlans={holidayPlans} />
-            <Link to="/add" style={{ textDecoration: 'none' }}>
-                <button style={addButtonStyle}>Add New Plan</button>
-            </Link>
+            <div className={styles.searchContainerStyle}>
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className={styles.searchStyle}
+                />
+                <FaSearch className={styles.searchIconStyle} />
+            </div>
+            <HolidayPlanList
+                holidayPlans={currentItems}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+            />
+            <div className={styles.buttonsContainer}>
+                <Link to="/add" className={styles.addButtonStyle}>
+                    Add New Plan
+                </Link>
+                <div className={styles.itemsPerPageContainer}>
+                    <label htmlFor="itemsPerPage" className={styles.itemsPerPageLabel}>Items per page: </label>
+                    <select id="itemsPerPage" value={itemsPerPage} onChange={handleItemsPerPageChange} className={styles.itemsPerPageSelect}>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                    </select>
+                </div>
+            </div>
+            <Pagination
+                itemsPerPage={itemsPerPage}
+                totalItems={filteredPlans.length}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+            />
         </div>
     );
-};
-
-const containerStyle = {
-    maxWidth: '600px',
-    margin: 'auto',
-    padding: '20px',
-    textAlign: 'center',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-    background: '#fff',
-};
-
-const titleStyle = {
-    color: '#333',
-};
-
-const addButtonStyle = {
-    margin: '20px 0',
-    padding: '10px 20px',
-    fontSize: '18px',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    cursor: 'pointer',
 };
 
 export default Home;
