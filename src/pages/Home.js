@@ -11,7 +11,8 @@ const Home = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(10);
     const [searchTerm, setSearchTerm] = useState('');
-    const [message, setMessage] = useState('');    
+    const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
 
     useEffect(() => {
         const messageFromStorage = localStorage.getItem('holidayPlanMessage');
@@ -19,6 +20,7 @@ const Home = () => {
             setMessage(messageFromStorage);
             const timer = setTimeout(() => {
                 setMessage('');
+                setMessageType('');
                 localStorage.removeItem('holidayPlanMessage');
             }, 5000);
 
@@ -41,7 +43,7 @@ const Home = () => {
             }
         };
         fetchHolidayPlans();
-    }, [supabase]);
+    }, []);
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
@@ -60,8 +62,25 @@ const Home = () => {
         console.log(`Editing plan id ${id}`);
     };
 
-    const handleDelete = (id) => {
-        console.log(`Deleting plan id ${id}`);
+    const handleDelete = async (id) => {
+        try {
+            const { error } = await supabase
+                .from('holidayplan')
+                .delete()
+                .eq('id', id);
+
+            if (error) {
+                setMessage('Error druging delete holiday plan!');
+                setMessageType('error');
+            } else {
+                setMessage('Sucessfully deleted holiday plan!');
+                setMessageType('success');
+                const updatedPlans = holidayPlans.filter((plan) => plan.id !== id);
+                setHolidayPlans(updatedPlans);
+            }
+        } catch (error) {
+            console.error('Unexpected error:', error);
+        }
     };
 
     const filteredPlans = holidayPlans.filter((plan) =>
@@ -75,7 +94,7 @@ const Home = () => {
     return (
         <div className={styles.containerStyle}>
             <h2 className={styles.titleStyle}>Explore Holiday Plans</h2>
-            {message && <p>{message}</p>}
+            {message && <p className={messageType === 'error' ? styles.errorMessage : styles.successMessage}>{message}</p>}
             <div className={styles.searchContainerStyle}>
                 <input
                     type="text"
