@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styles from './HolidayPlanForm.module.css';
 
 const HolidayPlanForm = ({ onSubmit, onBack }) => {
     const [formData, setFormData] = useState({
@@ -45,28 +46,15 @@ const HolidayPlanForm = ({ onSubmit, onBack }) => {
             onSubmit(formData);
         }
     };
+
     const handleBack = () => {
         onBack();
     };
 
-    const inputStyle = {
-        width: 'calc(100% - 2px)',
-        padding: '8px',
-        fontSize: '16px',
-        borderRadius: '4px',
-        border: '1px solid #ccc',
-        boxSizing: 'border-box',
-    };
-
-    const errorInputStyle = {
-        ...inputStyle,
-        borderColor: 'red',
-    };
-
     return (
-        <div style={formBoxStyle}>
-            <form onSubmit={handleSubmit} style={formStyle}>
-                <div style={formGroupStyle}>
+        <div className={styles.formBox}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.formGroup}>
                     <label htmlFor="title">Title:</label>
                     <input
                         type="text"
@@ -74,24 +62,24 @@ const HolidayPlanForm = ({ onSubmit, onBack }) => {
                         name="title"
                         value={formData.title}
                         onChange={handleChange}
-                        style={formErrors.title ? errorInputStyle : inputStyle}
+                        className={formErrors.title ? styles.errorInput : styles.inputStyle}
                     />
-                    {formErrors.title && <div style={errorStyle}>{formErrors.title}</div>}
+                    {formErrors.title && <div className={styles.error}>{formErrors.title}</div>}
                 </div>
 
-                <div style={formGroupStyle}>
+                <div className={styles.formGroup}>
                     <label htmlFor="description">Description:</label>
                     <textarea
                         id="description"
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        style={formErrors.description ? errorInputStyle : inputStyle}
+                        className={formErrors.description ? styles.errorInput : styles.inputStyle}
                     />
-                    {formErrors.description && <div style={errorStyle}>{formErrors.description}</div>}
+                    {formErrors.description && <div className={styles.error}>{formErrors.description}</div>}
                 </div>
 
-                <div style={formGroupStyle}>
+                <div className={styles.formGroup}>
                     <label htmlFor="date">Date:</label>
                     <input
                         type="date"
@@ -99,12 +87,12 @@ const HolidayPlanForm = ({ onSubmit, onBack }) => {
                         name="date"
                         value={formData.date}
                         onChange={handleChange}
-                        style={formErrors.date ? errorInputStyle : inputStyle}
+                        className={formErrors.date ? styles.errorInput : styles.inputStyle}
                     />
-                    {formErrors.date && <div style={errorStyle}>{formErrors.date}</div>}
+                    {formErrors.date && <div className={styles.error}>{formErrors.date}</div>}
                 </div>
 
-                <div style={formGroupStyle}>
+                <div className={styles.formGroup}>
                     <label htmlFor="location">Location:</label>
                     <input
                         type="text"
@@ -112,12 +100,12 @@ const HolidayPlanForm = ({ onSubmit, onBack }) => {
                         name="location"
                         value={formData.location}
                         onChange={handleChange}
-                        style={formErrors.location ? errorInputStyle : inputStyle}
+                        className={formErrors.location ? styles.errorInput : styles.inputStyle}
                     />
-                    {formErrors.location && <div style={errorStyle}>{formErrors.location}</div>}
+                    {formErrors.location && <div className={styles.error}>{formErrors.location}</div>}
                 </div>
 
-                <div style={formGroupStyle}>
+                <div className={styles.formGroup}>
                     <label htmlFor="participants">Participants:</label>
                     <input
                         type="text"
@@ -125,62 +113,22 @@ const HolidayPlanForm = ({ onSubmit, onBack }) => {
                         name="participants"
                         value={formData.participants}
                         onChange={handleChange}
-                        style={formErrors.participants ? errorInputStyle : inputStyle}
+                        className={formErrors.participants ? styles.errorInput : styles.inputStyle}
                     />
-                    {formErrors.participants && <div style={errorStyle}>{formErrors.participants}</div>}
+                    {formErrors.participants && <div className={styles.error}>{formErrors.participants}</div>}
                     <small>Separate multiple participants with commas (,)</small>
                 </div>
 
-                <button type="submit" style={submitButtonStyle}>
+                <button type="submit" className={styles.submitButton}>
                     Submit
                 </button>
 
-                <button type="button" onClick={handleBack} style={backButtonStyle}>
+                <button type="button" onClick={handleBack} className={styles.backButton}>
                     Back
                 </button>
             </form>
         </div>
     );
-};
-
-const formBoxStyle = {
-    maxWidth: '420px',
-    margin: 'auto',
-    padding: '25px',
-    borderRadius: '4px',
-    boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 8px',
-};
-
-const formGroupStyle = {
-    marginBottom: '15px',
-};
-
-const errorStyle = {
-    color: 'red',
-    fontSize: '14px',
-    marginTop: '5px',
-};
-
-const formStyle = {
-};
-
-const submitButtonStyle = {
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    padding: '10px 15px',
-    fontSize: '16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginRight: '10px',
-};
-
-const backButtonStyle = {
-    backgroundColor: 'red',
-    color: 'white',
-    padding: '10px 15px',
-    fontSize: '16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
 };
 
 export default HolidayPlanForm;
