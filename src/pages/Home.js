@@ -22,7 +22,8 @@ const Home = () => {
                 setMessage('');
                 setMessageType('');
                 localStorage.removeItem('holidayPlanMessage');
-            }, 5000);
+                window.location.reload();
+            }, 2000);
 
             return () => clearTimeout(timer);
         }
