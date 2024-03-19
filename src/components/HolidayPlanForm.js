@@ -29,12 +29,42 @@ const HolidayPlanForm = ({ onSubmit, onBack }) => {
     const validateForm = () => {
         let valid = true;
         const newFormErrors = { ...formErrors };
+        
         if (formData.title.trim() === '') {
             newFormErrors.title = 'Title is required';
             valid = false;
         } else {
             newFormErrors.title = '';
         }
+
+        if (formData.description.trim() === '') {
+            newFormErrors.description = 'Description is required';
+            valid = false;
+        } else {
+            newFormErrors.description = '';
+        }
+
+        if (formData.date.trim() === '') {
+            newFormErrors.date = 'Date is required';
+            valid = false;
+        } else {
+            newFormErrors.date = '';
+        }
+
+        if (formData.location.trim() === '') {
+            newFormErrors.location = 'Location is required';
+            valid = false;
+        } else {
+            newFormErrors.location = '';
+        }
+
+        if (formData.participants.trim() === '') {
+            newFormErrors.participants = 'Participants are required';
+            valid = false;
+        } else {
+            newFormErrors.participants = '';
+        }
+
         setFormErrors(newFormErrors);
         return valid;
     };
