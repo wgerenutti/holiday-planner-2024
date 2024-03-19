@@ -1,13 +1,17 @@
 .containerStyle {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .planStyle {
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+    padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
+    box-sizing: border-box;
 }
 
 .actionContainerStyle {
@@ -24,14 +28,14 @@
 
 .editButtonStyle {
     composes: buttonStyle;
-    background-color: #4CAF50; 
+    background-color: #4caf50;
     color: white;
     border: none;
 }
 
 .deleteButtonStyle {
     composes: buttonStyle;
-    background-color: #f44336; 
+    background-color: #f44336;
     color: white;
     border: none;
 }
@@ -42,7 +46,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -69,7 +73,7 @@
 
 .modalEditButton {
     composes: modalButton;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     border: none;
 }
@@ -83,7 +87,7 @@
 
 .modalDeleteButton {
     composes: modalButton;
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     border: none;
 }
