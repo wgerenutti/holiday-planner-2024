@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HolidayPlanForm from '../components/HolidayPlanForm';
 import supabase from '../config/supabaseClient.js'; 
-import './AddHolidayPlans.module.css'
+import styles from './AddHolidayPlans.module.css';
 
 const AddHolidayPlans = () => {
     const navigate = useNavigate();
     const [message, setMessage] = useState('');
+    const [submitted, setSubmitted] = useState(false);
 
     const SUCCESS_MESSAGE = 'Holiday plan added successfully!';
     const ERROR_MESSAGES = {
@@ -28,6 +29,7 @@ const AddHolidayPlans = () => {
                 setMessage(ERROR_MESSAGES.DEFAULT);
             } else {
                 setMessage(SUCCESS_MESSAGE);
+                setSubmitted(true); 
             }
         } catch (error) {
             setMessage(ERROR_MESSAGES.UNEXPECTED);
@@ -35,24 +37,32 @@ const AddHolidayPlans = () => {
     };
 
     useEffect(() => {
-        if (message) {
-            navigate('/', { state: { message: message } });
+        if (submitted) {
+            const timer = setTimeout(() => {
+                navigate('/', { state: { message: message } });
+            }, 3000); 
+
+            return () => clearTimeout(timer); 
         }
-    }, [message, navigate]);
+    }, [submitted, message, navigate]);
 
     const handleBack = () => {
         navigate(-1);
     };
 
     return (
-        <div className="container">
-            <div className="title-container">
-                <h2>Add holiday plan</h2>
+        <div className={styles.containerStyle}>
+            <div className={styles.titleContainer}>
+                <h2 className={styles.titleStyle}>Add holiday plan</h2>
             </div>
-            <p>{message}</p>
+            {message && (
+                <p className={message.includes('successfully') ? styles.successMessage : styles.errorMessage}>
+                    {message}
+                </p>
+            )}
             <HolidayPlanForm onSubmit={handleSubmit} onBack={handleBack} />
         </div>
-    );
+    );    
 };
 
 export default AddHolidayPlans;

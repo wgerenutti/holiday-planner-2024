@@ -1,4 +1,4 @@
-.container {
+.containerStyle {
     max-width: 600px;
     margin: auto;
     padding: 20px;
@@ -8,10 +8,28 @@
     background: #fff;
 }
 
-.title-container {
+.titleContainer {
     margin-bottom: 20px;
 }
 
-.title-container h2 {
+.titleStyle {
     color: #333;
+}
+
+.successMessage {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.errorMessage {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
 }
